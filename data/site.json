@@ -1,0 +1,128 @@
+{
+  "settings": {
+    "brand": "BKK",
+    "brandLong": "BKK",
+    "heroKicker": "THAILAND'S MYANMAR COMMUNITY",
+    "heroTitleTop": "BKK",
+    "heroTitleBottom": "Play better",
+    "heroDescription": "ထိုင်းရောက်ရွှေမြန်မာများအတွက် အယုံကြည်ရဆုံးနံပတ်တစ် ဝက်ဆိုက်ကြီး",
+    "gameUrl": "https://bkkslotgame.com/",
+    "telegramUrl": "https://t.me/bkkofficialchannel",
+    "contactUrl": "https://t.me/bkk88_bot",
+    "footerText": "18+ | တာဝန်ယူမှုရှိစွာ ကစားပါ။",
+    "stats": [
+      {
+        "value": "24/7",
+        "label": "ဝန်ဆောင်မှု"
+      },
+      {
+        "value": "Daily",
+        "label": "Promotion"
+      },
+      {
+        "value": "Fast",
+        "label": "Mobile Access"
+      }
+    ]
+  },
+  "promotions": [
+    {
+      "id": "promo-daily",
+      "eyebrow": "New member free 50",
+      "title": "New member free 50",
+      "short": "New memb free 50",
+      "details": "New member တိုင်း အကောင့်ဖွင့်ရုံနဲ့ ဖရီး 50 ရမှာပါရှင့်။",
+      "image": "/uploads/1785837135100-d58c463cc2.jpg",
+      "badge": "DAILY",
+      "buttonText": "အသေးစိတ်ကြည့်ရန်",
+      "link": "https://bkkslotgame.com/",
+      "active": true,
+      "order": 2
+    },
+    {
+      "id": "promo-vip",
+      "eyebrow": "နေ့စဉ်ဘောနပ် 20%",
+      "title": "နေ့စဉ်ဘောနပ် 20%",
+      "short": "နေ့စဉ်ဘောနပ် 20%",
+      "details": "ကြိုက်သည့်သွင်းငွေတစ်ကြိမ်တွင် ယူကစားနိုင်သည်။",
+      "image": "/uploads/1785837314021-830e1b4426.jpg",
+      "badge": "နေ့စဉ် 20%",
+      "buttonText": "အသေးစိတ်ကြည့်ရန်",
+      "link": "https://bkkslotgame.com/",
+      "active": true,
+      "order": 3
+    },
+    {
+      "id": "9920221a-2b4b-4ff1-9b3d-a54e360b67f4",
+      "eyebrow": "နေ့စဉ် ကော်မရှင်ကြေး",
+      "title": "နေ့စဉ် ကော်မရှင်ကြေး",
+      "short": "နေ့စဉ် ကော်မရှင်ကြေး",
+      "details": "ကော်မရှင်ကြေး 1.5%",
+      "image": "/uploads/1785837404669-9092b3fec9.jpg",
+      "badge": "NEW",
+      "buttonText": "ယခုကစားမည်",
+      "link": "https://bkkslotgame.com/",
+      "active": true,
+      "order": 3
+    },
+    {
+      "id": "c67a7010-014b-496b-bdf3-c23e4dbf1081",
+      "eyebrow": "Cash back 10%",
+      "title": "Cash back 10%",
+      "short": "Cash back 10%",
+      "details": "နေ့စဉ်ရှုံးကြေး 10% အား နေ့စဉ်ယူကစားနိုင်သည်။",
+      "image": "/uploads/1785837456817-be7564d8c8.jpg",
+      "badge": "NEW",
+      "buttonText": "ယခုကစားမည်",
+      "link": "https://bkkslotgame.com/",
+      "active": true,
+      "order": 4
+    },
+    {
+      "id": "6ef560b0-b4f6-4ca3-9f28-d7c26a85ebcd",
+      "eyebrow": "New member 100%",
+      "title": "New member 100%",
+      "short": "New member 100%",
+      "details": "New member 100%",
+      "image": "/uploads/1785837563794-122666d634.jpg",
+      "badge": "NEW",
+      "buttonText": "ယခုကစားမည်",
+      "link": "https://bkkslotgame.com/",
+      "active": true,
+      "order": 5
+    }
+  ],
+  "events": [
+    {
+      "id": "event-weekend",
+      "title": "BKK Weekend Event",
+      "date": "Every Weekend",
+      "description": "Weekend အတွက် အထူး Event နဲ့ Reward အစီအစဉ်။",
+      "image": "/assets/event-weekend.svg",
+      "link": "",
+      "active": true,
+      "order": 1
+    },
+    {
+      "id": "event-lucky",
+      "title": "Lucky Draw",
+      "date": "Coming Soon",
+      "description": "Lucky Draw Event အသစ်ကို မကြာမီ စတင်ပါမယ်။",
+      "image": "/assets/event-lucky.svg",
+      "link": "",
+      "active": true,
+      "order": 2
+    },
+    {
+      "id": "event-festival",
+      "title": "Member Festival",
+      "date": "Special Event",
+      "description": "BKK Member များအတွက် အထူး Festival Event။",
+      "image": "/assets/event-festival.svg",
+      "link": "",
+      "active": true,
+      "order": 3
+    }
+  ],
+  "updatedAt": "2026-08-04T10:04:07.300Z"
+}
