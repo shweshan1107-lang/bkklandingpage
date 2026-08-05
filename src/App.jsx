@@ -5,6 +5,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Crown,
+  Copy,
+  Check,
   Gamepad2,
   Gift,
   LoaderCircle,
@@ -51,6 +53,7 @@ export default function App() {
   const [modal, setModal] = useState(null);
   const [activeEvent, setActiveEvent] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [lineCopied, setLineCopied] = useState(false);
   const eventTouchStartX = useRef(null);
 
   useEffect(() => {
@@ -96,6 +99,27 @@ export default function App() {
     else previous();
   };
 
+  const copyLineId = async () => {
+    const lineId = String(settings.lineId || '').trim();
+    if (!lineId) return;
+
+    try {
+      await navigator.clipboard.writeText(lineId);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = lineId;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+
+    setLineCopied(true);
+    window.setTimeout(() => setLineCopied(false), 1800);
+  };
+
   return <div className="site-shell">
     <div className="ambient a1"/><div className="ambient a2"/>
     <div className="particles">{Array.from({length:14}).map((_,i)=><span key={i} style={{'--i':i}} />)}</div>
@@ -128,21 +152,32 @@ export default function App() {
         <div className="hero-stage">
           <div className="ring r1"/><div className="ring r2"/>
           <div className="chip c1">B</div><div className="chip c2">K</div><div className="chip c3">K</div>
-          <div className="hero-card"><div className="sweep"/><div className="card-top"><span>PREMIUM MEMBER</span><Crown size={24}/></div><div className="hero-logo">{settings.brandLong || settings.brand}</div><div className="line"/><div className="card-bottom"><span>WELCOME BONUS</span><b>VIP ACCESS</b></div></div>
+          <div className="hero-card">
+            <div className="sweep"/>
+            <div className="card-top"><span>PREMIUM MEMBER</span><Crown size={24}/></div>
+            <div className="hero-logo">{settings.brandLong || settings.brand}</div>
+            {settings.lineId ? <button className={`line-id-badge ${lineCopied ? 'copied' : ''}`} type="button" onClick={copyLineId} title="LINE ID ကော်ပီယူရန်">
+              <span className="line-id-icon">LINE</span>
+              <span className="line-id-copy"><small>LINE ID</small><strong>{settings.lineId}</strong></span>
+              <span className="line-copy-action">{lineCopied ? <Check size={17}/> : <Copy size={17}/>}<em>{lineCopied ? 'COPIED' : 'COPY'}</em></span>
+            </button> : null}
+            <div className="line"/>
+            <div className="card-bottom"><span>WELCOME BONUS</span><b>VIP ACCESS</b></div>
+          </div>
         </div>
       </section>
 
       <section className="marquee"><div><span>✦ DAILY BONUS</span><span>✦ PREMIUM EVENTS</span><span>✦ FAST LOGIN</span><span>✦ MEMBER REWARDS</span><span>✦ DAILY BONUS</span><span>✦ PREMIUM EVENTS</span><span>✦ FAST LOGIN</span><span>✦ MEMBER REWARDS</span></div></section>
 
       <section className="content section-pad" id="promotions">
-        <div className="heading"><div><div className="eyebrow"><Gift size={16}/> EXCLUSIVE OFFERS</div><h2>လက်ရှိ Promotion များ</h2></div><p>Admin မှ ပုံ၊ စာနဲ့ Link ပြောင်းလိုက်တာနဲ့ ဒီနေရာမှာ ချက်ချင်းပေါ်လာမယ်။</p></div>
+        <div className="heading heading-clean"><div><div className="eyebrow"><Gift size={16}/> EXCLUSIVE OFFERS</div><h2>လက်ရှိ Promotion များ</h2></div></div>
         {loading ? <div className="loading"><LoaderCircle className="spin"/> Loading promotions...</div> : null}
         {!loading && promotions.length === 0 ? <div className="empty-public">လက်ရှိ Promotion မရှိသေးပါ။</div> : null}
         <div className="promo-grid">{promotions.map((promotion)=><TiltCard key={promotion.id}><div className="shine"/><img src={promotion.image} alt={promotion.title}/><div className="badge">{promotion.badge}</div><div className="promo-copy"><span>{promotion.eyebrow}</span><h3>{promotion.title}</h3><p>{promotion.short}</p><button onClick={()=>setModal(promotion)}>{promotion.buttonText || 'အသေးစိတ်ကြည့်ရန်'} <ArrowRight size={17}/></button></div></TiltCard>)}</div>
       </section>
 
       <section className="content section-pad" id="events">
-        <div className="heading"><div><div className="eyebrow"><CalendarDays size={16}/> LIVE & UPCOMING</div><h2>BKK Events</h2></div><p>Event ပုံနဲ့စာတွေကို Admin Dashboard မှ ထည့်၊ ပြင်၊ ဖျက်နိုင်ပါတယ်။</p></div>
+        <div className="heading heading-clean"><div><div className="eyebrow"><CalendarDays size={16}/> LIVE & UPCOMING</div><h2>BKK Events</h2></div></div>
         {events.length ? <><div className="event-showcase" onTouchStart={handleEventTouchStart} onTouchEnd={handleEventTouchEnd}><button className="arrow" onClick={previous} aria-label="Previous event"><ChevronLeft/></button><div className="event-stack">{events.map((event,index)=>{const distance=(index-activeEvent+events.length)%events.length; const position=distance===0?'active':distance===1?'right':'left'; return <article key={event.id} className={`event-card ${position}`}><img src={event.image} alt={event.title}/><div className="event-copy"><span>{event.date}</span><h3>{event.title}</h3><p>{event.description}</p>{event.link ? <a href={event.link} target="_blank" rel="noreferrer">Event သို့သွားရန် <ArrowRight size={16}/></a> : null}</div></article>})}</div><button className="arrow" onClick={next} aria-label="Next event"><ChevronRight/></button></div><div className="dots" aria-label={currentEvent?.title || 'Events'}>{events.map((event,index)=><button key={event.id} className={index===activeEvent?'active':''} onClick={()=>setActiveEvent(index)}/>)}</div></> : <div className="empty-public">လက်ရှိ Event မရှိသေးပါ။</div>}
       </section>
 

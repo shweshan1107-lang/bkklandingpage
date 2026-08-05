@@ -2,6 +2,7 @@ export const fallbackData = {
   settings: {
     brand: 'BKK',
     brandLong: 'Bangkok',
+    lineId: '@bkk88',
     heroKicker: "THAILAND'S MYANMAR COMMUNITY",
     heroTitleTop: 'BKK',
     heroTitleBottom: 'LUXURY PLAY',

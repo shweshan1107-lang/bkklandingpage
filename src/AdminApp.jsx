@@ -213,6 +213,7 @@ export default function AdminApp() {
         <div className="settings-card"><div className="admin-form-grid">
           <Field label="Brand Short"><input value={data.settings.brand} onChange={(event)=>setData({...data,settings:{...data.settings,brand:event.target.value}})}/></Field>
           <Field label="Card Logo Text"><input value={data.settings.brandLong} onChange={(event)=>setData({...data,settings:{...data.settings,brandLong:event.target.value}})}/></Field>
+          <Field label="Hero Card LINE ID"><input value={data.settings.lineId || ''} placeholder="ဥပမာ @bkk88" onChange={(event)=>setData({...data,settings:{...data.settings,lineId:event.target.value}})}/></Field>
           <Field label="Hero Small Title" full><input value={data.settings.heroKicker} onChange={(event)=>setData({...data,settings:{...data.settings,heroKicker:event.target.value}})}/></Field>
           <Field label="Hero Gold Title"><input value={data.settings.heroTitleTop} onChange={(event)=>setData({...data,settings:{...data.settings,heroTitleTop:event.target.value}})}/></Field>
           <Field label="Hero Main Title"><input value={data.settings.heroTitleBottom} onChange={(event)=>setData({...data,settings:{...data.settings,heroTitleBottom:event.target.value}})}/></Field>
