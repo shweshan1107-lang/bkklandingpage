@@ -264,6 +264,7 @@ app.put('/api/admin/settings', auth, (req, res) => {
       ...data.settings,
       brand: cleanText(input.brand, 40),
       brandLong: cleanText(input.brandLong, 80),
+      lineId: cleanText(input.lineId, 80),
       heroKicker: cleanText(input.heroKicker, 150),
       heroTitleTop: cleanText(input.heroTitleTop, 80),
       heroTitleBottom: cleanText(input.heroTitleBottom, 120),
