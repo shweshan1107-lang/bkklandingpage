@@ -177,7 +177,7 @@
   display: flex;
   flex-direction: column;
   gap: 70px;
-  animation: bkk-entry-watermark-float 12s ease-in-out infinite alternate;
+  animation: bkk-entry-watermark-float 8s ease-in-out infinite alternate;
   will-change: transform;
 }
 .bkk-entry-watermark-row {
@@ -250,8 +250,8 @@
 @keyframes bkk-entry-spin { to { transform: rotate(360deg); } }
 @keyframes bkk-entry-glimmer { to { opacity: .16; } }
 @keyframes bkk-entry-watermark-float {
-  from { transform: translateY(-24px); }
-  to { transform: translateY(24px); }
+  from { transform: translateY(-32px); }
+  to { transform: translateY(32px); }
 }
 @media (hover: hover) {
   .bkk-entry-button:hover:not(:disabled) {
