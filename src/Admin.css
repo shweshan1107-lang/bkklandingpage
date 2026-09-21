@@ -293,3 +293,33 @@
     padding-inline: 0.55rem;
   }
 }
+
+/* Landing page background controls */
+.admin-settings-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.admin-settings-fields .admin-field { min-width: 0; }
+.admin-background-heading { margin: 1.8rem 0 1rem; }
+.admin-background-heading h2 { margin: 0 0 .4rem; font-size: 1.35rem; }
+.admin-background-heading p, .admin-background-note { color: var(--admin-muted); font-size: .85rem; line-height: 1.7; }
+.admin-background-heading p { margin: 0; }
+.admin-background-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
+.admin-background-card { min-width: 0; padding: 1.2rem; border: 1px solid var(--admin-line); border-radius: 1.2rem; background: rgba(255,255,255,.035); }
+.admin-background-card h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+.admin-background-card > p { margin: 0 0 1rem; color: var(--admin-muted); font-size: .8rem; line-height: 1.7; }
+.admin-background-preview { display: grid; place-items: center; height: 220px; overflow: hidden; border: 1px dashed rgba(201,167,255,.25); border-radius: .85rem; background: #100a15; }
+.admin-background-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.admin-background-preview > div { display: grid; justify-items: center; gap: .65rem; color: var(--admin-muted); font-size: .8rem; text-align: center; }
+.admin-background-actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+.admin-background-actions .upload-button { position: relative; font-size: .85rem; }
+.admin-background-actions .upload-button input { position: absolute; display: block; width: 1px; height: 1px; opacity: 0; overflow: hidden; padding: 0; }
+.admin-background-actions .upload-button:focus-within { outline: 2px solid var(--admin-gold); outline-offset: 4px; }
+.admin-background-actions .admin-secondary { font-size: .85rem; }
+.admin-background-actions .is-disabled, .admin-background-actions button:disabled { opacity: .55; cursor: wait; }
+.admin-background-card > .admin-background-error { margin: .8rem 0 0; color: #ffaaaa; }
+.admin-background-note { margin: 1rem 0 1.5rem; }
+.admin-legacy-settings summary { padding: 1.2rem; cursor: pointer; color: #c9bdce; font-size: .9rem; }
+@media (max-width: 1000px) { .admin-background-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) {
+  .admin-background-card { padding: .9rem; }
+  .admin-background-preview { height: 200px; }
+  .admin-background-actions > * { flex: 1 1 auto; }
+}

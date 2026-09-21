@@ -56,17 +56,76 @@ function UploadField({ value, onChange, onBusy }) {
   </div>;
 }
 
+function BackgroundUploadField({ id, title, hint, value, onChange, onBusy, disabled }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [previewFailed, setPreviewFailed] = useState(false);
+  useEffect(() => { setPreviewFailed(false); }, [value]);
+
+  const upload = async (event) => {
+    const input = event.currentTarget;
+    const file = event.target.files?.[0];
+    if (!file || busy || disabled) return;
+    setError('');
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) {
+      setError('Choose a JPG, PNG, WebP or GIF image.');
+      input.value = '';
+      return;
+    }
+    if (!file.size || file.size > 8 * 1024 * 1024) {
+      setError('Choose a non-empty image smaller than 8 MB.');
+      input.value = '';
+      return;
+    }
+    setBusy(true);
+    onBusy(true);
+    try {
+      const result = await api.upload(file);
+      onChange(result.url);
+    } catch (uploadError) {
+      setError(uploadError.message || 'Upload failed. Please try again.');
+    } finally {
+      input.value = '';
+      setBusy(false);
+      onBusy(false);
+    }
+  };
+
+  return <article className="admin-background-card" aria-labelledby={`${id}-title`} aria-busy={busy}>
+    <h3 id={`${id}-title`}>{title}</h3>
+    <p>{hint}</p>
+    <div className="admin-background-preview">
+      {value && !previewFailed
+        ? <img src={value} alt={`${title} preview`} onError={() => setPreviewFailed(true)} />
+        : <div><ImagePlus size={32}/><span>{previewFailed ? 'Image preview unavailable' : 'No background selected'}</span></div>}
+    </div>
+    <div className="admin-background-actions">
+      <label className={`upload-button ${busy || disabled ? 'is-disabled' : ''}`}>
+        {busy ? <LoaderCircle size={18} className="spin"/> : <UploadCloud size={18}/>}
+        {busy ? 'Uploading...' : value ? 'Replace image' : 'Upload image'}
+        <input aria-label={`${title} upload`} type="file" accept="image/png,image/jpeg,image/webp,image/gif" disabled={busy || disabled} onChange={upload}/>
+      </label>
+      {value ? <button type="button" className="admin-secondary" disabled={busy || disabled} onClick={() => { onChange(''); setError(''); }}><Trash2 size={16}/> Remove</button> : null}
+    </div>
+    {error ? <p className="admin-background-error" role="alert">{error}</p> : null}
+  </article>;
+}
+
 export default function AdminApp() {
   const [token, setToken] = useState(getToken());
   const [credentials, setCredentials] = useState({ username: 'admin', password: '' });
   const [data, setData] = useState(null);
-  const [tab, setTab] = useState('promotions');
+  const [tab, setTab] = useState('settings');
   const [loading, setLoading] = useState(Boolean(token));
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState(0);
   const [message, setMessage] = useState('');
   const [promotionForm, setPromotionForm] = useState(null);
   const [eventForm, setEventForm] = useState(null);
+  const onUploadBusy = (busy) => setUploading((count) => Math.max(0, count + (busy ? 1 : -1)));
+  const updateSetting = (key, value) => setData((current) => ({
+    ...current, settings: { ...current.settings, [key]: value }
+  }));
 
   const load = async () => {
     setLoading(true);
@@ -110,11 +169,13 @@ export default function AdminApp() {
   const orderedEvents = useMemo(() => [...(data?.events || [])].sort((a,b)=>Number(a.order)-Number(b.order)), [data]);
 
   const saveSettings = async () => {
+    if (saving || uploading) return;
     setSaving(true);
+    setMessage('');
     try {
-      await api.saveSettings(data.settings);
-      setMessage('Website Settings သိမ်းပြီးပါပြီ');
-      await load();
+      const response = await api.saveSettings(data.settings);
+      setData(response.data);
+      setMessage('Website settings saved.');
     } catch (error) { setMessage(error.message); }
     finally { setSaving(false); }
   };
@@ -209,25 +270,36 @@ export default function AdminApp() {
       </section> : null}
 
       {tab==='settings' ? <section className="admin-section settings-section">
-        <div className="admin-section-head"><div><h2>Website Content & Links</h2><p>Header၊ Hero စာနဲ့ Game/Telegram Link ပြောင်းပါ။</p></div><button className="admin-primary" disabled={saving} onClick={saveSettings}><Save/> Save Settings</button></div>
-        <div className="settings-card"><div className="admin-form-grid">
-          <Field label="Brand Short"><input value={data.settings.brand} onChange={(event)=>setData({...data,settings:{...data.settings,brand:event.target.value}})}/></Field>
-          <Field label="Card Logo Text"><input value={data.settings.brandLong} onChange={(event)=>setData({...data,settings:{...data.settings,brandLong:event.target.value}})}/></Field>
-          <Field label="Hero Card LINE ID"><input value={data.settings.lineId || ''} placeholder="ဥပမာ @bkk88" onChange={(event)=>setData({...data,settings:{...data.settings,lineId:event.target.value}})}/></Field>
-          <Field label="Hero Small Title" full><input value={data.settings.heroKicker} onChange={(event)=>setData({...data,settings:{...data.settings,heroKicker:event.target.value}})}/></Field>
-          <Field label="Hero Gold Title"><input value={data.settings.heroTitleTop} onChange={(event)=>setData({...data,settings:{...data.settings,heroTitleTop:event.target.value}})}/></Field>
-          <Field label="Hero Main Title"><input value={data.settings.heroTitleBottom} onChange={(event)=>setData({...data,settings:{...data.settings,heroTitleBottom:event.target.value}})}/></Field>
-          <Field label="Hero Description" full><textarea rows="4" value={data.settings.heroDescription} onChange={(event)=>setData({...data,settings:{...data.settings,heroDescription:event.target.value}})}/></Field>
-          <Field label="Game Link" full><div className="input-icon"><LinkIcon/><input value={data.settings.gameUrl} onChange={(event)=>setData({...data,settings:{...data.settings,gameUrl:event.target.value}})}/></div></Field>
-          <Field label="Telegram Channel Link" full><div className="input-icon"><LinkIcon/><input value={data.settings.telegramUrl} onChange={(event)=>setData({...data,settings:{...data.settings,telegramUrl:event.target.value}})}/></div></Field>
-          <Field label="Contact/Admin Link" full><div className="input-icon"><LinkIcon/><input value={data.settings.contactUrl} onChange={(event)=>setData({...data,settings:{...data.settings,contactUrl:event.target.value}})}/></div></Field>
-          <Field label="Footer Text" full><input value={data.settings.footerText} onChange={(event)=>setData({...data,settings:{...data.settings,footerText:event.target.value}})}/></Field>
-        </div></div>
+        <div className="admin-section-head"><div><h2>Landing Page Settings</h2><p>Update the welcome card, links and background images.</p></div><button className="admin-primary" disabled={saving || Boolean(uploading)} aria-busy={saving} onClick={saveSettings}>{saving ? <LoaderCircle className="spin"/> : <Save/>} {saving ? 'Saving...' : uploading ? 'Uploading...' : 'Save Settings'}</button></div>
+        <fieldset className="admin-settings-fields" disabled={saving}>
+          <div className="settings-card"><div className="admin-form-grid">
+            <Field label="Welcome Text" full><textarea rows="2" maxLength={180} value={data.settings.landingWelcome ?? 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။'} onChange={(event)=>updateSetting('landingWelcome', event.target.value)}/></Field>
+            <Field label="Card Brand"><input maxLength={40} value={data.settings.brand || ''} onChange={(event)=>updateSetting('brand', event.target.value)}/></Field>
+            <Field label="LINE ID"><input maxLength={80} value={data.settings.lineId || ''} placeholder="@bkk1111" onChange={(event)=>updateSetting('lineId', event.target.value)}/></Field>
+            <Field label="Game Link" full><div className="input-icon"><LinkIcon/><input value={data.settings.gameUrl || ''} onChange={(event)=>updateSetting('gameUrl', event.target.value)}/></div></Field>
+          </div></div>
+          <div className="admin-background-heading"><h2>Background Images</h2><p>Choose separate images for desktop and phone. JPG, PNG, WebP or GIF, up to 8 MB each.</p></div>
+          <div className="admin-background-grid">
+            <BackgroundUploadField id="background-desktop" title="PC Background" hint="Landscape image · recommended 1920 × 1080" value={data.settings.backgroundDesktop || ''} onChange={(value)=>updateSetting('backgroundDesktop', value)} onBusy={onUploadBusy} disabled={saving}/>
+            <BackgroundUploadField id="background-mobile" title="Phone Background" hint="Portrait image · recommended 1080 × 1920" value={data.settings.backgroundMobile || ''} onChange={(value)=>updateSetting('backgroundMobile', value)} onBusy={onUploadBusy} disabled={saving}/>
+          </div>
+          <p className="admin-background-note">Click Save Settings to apply changes. If only one image is set, it is used on both devices. With no images, the red background is shown.</p>
+          <details className="settings-card admin-legacy-settings"><summary>Other Website Settings</summary><div className="admin-form-grid">
+            <Field label="Card Logo Text"><input value={data.settings.brandLong || ''} onChange={(event)=>updateSetting('brandLong', event.target.value)}/></Field>
+            <Field label="Hero Small Title"><input value={data.settings.heroKicker || ''} onChange={(event)=>updateSetting('heroKicker', event.target.value)}/></Field>
+            <Field label="Hero Gold Title"><input value={data.settings.heroTitleTop || ''} onChange={(event)=>updateSetting('heroTitleTop', event.target.value)}/></Field>
+            <Field label="Hero Main Title"><input value={data.settings.heroTitleBottom || ''} onChange={(event)=>updateSetting('heroTitleBottom', event.target.value)}/></Field>
+            <Field label="Hero Description" full><textarea rows="4" value={data.settings.heroDescription || ''} onChange={(event)=>updateSetting('heroDescription', event.target.value)}/></Field>
+            <Field label="Telegram Channel Link" full><input value={data.settings.telegramUrl || ''} onChange={(event)=>updateSetting('telegramUrl', event.target.value)}/></Field>
+            <Field label="Contact/Admin Link" full><input value={data.settings.contactUrl || ''} onChange={(event)=>updateSetting('contactUrl', event.target.value)}/></Field>
+            <Field label="Footer Text" full><input value={data.settings.footerText || ''} onChange={(event)=>updateSetting('footerText', event.target.value)}/></Field>
+          </div></details>
+        </fieldset>
       </section> : null}
     </main>
 
-    {promotionForm ? <div className="admin-modal-bg"><form className="admin-modal" onSubmit={savePromotion}><div className="admin-modal-head"><div><span>PROMOTION EDITOR</span><h2>{promotionForm.id?'Promotion ပြင်မယ်':'Promotion အသစ်ထည့်မယ်'}</h2></div><button type="button" onClick={()=>setPromotionForm(null)}><X/></button></div><div className="admin-form-grid"><Field label="Image" full><UploadField value={promotionForm.image} onChange={(value)=>setPromotionForm({...promotionForm,image:value})} onBusy={setUploading}/></Field><Field label="Small English Title"><input value={promotionForm.eyebrow} onChange={(event)=>setPromotionForm({...promotionForm,eyebrow:event.target.value})}/></Field><Field label="Badge"><input value={promotionForm.badge} onChange={(event)=>setPromotionForm({...promotionForm,badge:event.target.value})}/></Field><Field label="Promotion Title" full><input required value={promotionForm.title} onChange={(event)=>setPromotionForm({...promotionForm,title:event.target.value})}/></Field><Field label="Short Description" full><textarea rows="2" value={promotionForm.short} onChange={(event)=>setPromotionForm({...promotionForm,short:event.target.value})}/></Field><Field label="Full Details" full><textarea rows="5" value={promotionForm.details} onChange={(event)=>setPromotionForm({...promotionForm,details:event.target.value})}/></Field><Field label="Button Text"><input value={promotionForm.buttonText} onChange={(event)=>setPromotionForm({...promotionForm,buttonText:event.target.value})}/></Field><Field label="Display Order"><input type="number" value={promotionForm.order} onChange={(event)=>setPromotionForm({...promotionForm,order:Number(event.target.value)})}/></Field><Field label="Promotion/Game Link" full><input value={promotionForm.link} onChange={(event)=>setPromotionForm({...promotionForm,link:event.target.value})}/></Field><label className="switch-field full"><input type="checkbox" checked={promotionForm.active} onChange={(event)=>setPromotionForm({...promotionForm,active:event.target.checked})}/><span/> Customer ကိုပြမယ်</label></div><div className="admin-modal-actions"><button type="button" className="admin-secondary" onClick={()=>setPromotionForm(null)}>Cancel</button><button className="admin-primary" disabled={saving||uploading}><Save/> Save Promotion</button></div></form></div> : null}
+    {promotionForm ? <div className="admin-modal-bg"><form className="admin-modal" onSubmit={savePromotion}><div className="admin-modal-head"><div><span>PROMOTION EDITOR</span><h2>{promotionForm.id?'Promotion ပြင်မယ်':'Promotion အသစ်ထည့်မယ်'}</h2></div><button type="button" onClick={()=>setPromotionForm(null)}><X/></button></div><div className="admin-form-grid"><Field label="Image" full><UploadField value={promotionForm.image} onChange={(value)=>setPromotionForm({...promotionForm,image:value})} onBusy={onUploadBusy}/></Field><Field label="Small English Title"><input value={promotionForm.eyebrow} onChange={(event)=>setPromotionForm({...promotionForm,eyebrow:event.target.value})}/></Field><Field label="Badge"><input value={promotionForm.badge} onChange={(event)=>setPromotionForm({...promotionForm,badge:event.target.value})}/></Field><Field label="Promotion Title" full><input required value={promotionForm.title} onChange={(event)=>setPromotionForm({...promotionForm,title:event.target.value})}/></Field><Field label="Short Description" full><textarea rows="2" value={promotionForm.short} onChange={(event)=>setPromotionForm({...promotionForm,short:event.target.value})}/></Field><Field label="Full Details" full><textarea rows="5" value={promotionForm.details} onChange={(event)=>setPromotionForm({...promotionForm,details:event.target.value})}/></Field><Field label="Button Text"><input value={promotionForm.buttonText} onChange={(event)=>setPromotionForm({...promotionForm,buttonText:event.target.value})}/></Field><Field label="Display Order"><input type="number" value={promotionForm.order} onChange={(event)=>setPromotionForm({...promotionForm,order:Number(event.target.value)})}/></Field><Field label="Promotion/Game Link" full><input value={promotionForm.link} onChange={(event)=>setPromotionForm({...promotionForm,link:event.target.value})}/></Field><label className="switch-field full"><input type="checkbox" checked={promotionForm.active} onChange={(event)=>setPromotionForm({...promotionForm,active:event.target.checked})}/><span/> Customer ကိုပြမယ်</label></div><div className="admin-modal-actions"><button type="button" className="admin-secondary" onClick={()=>setPromotionForm(null)}>Cancel</button><button className="admin-primary" disabled={saving||uploading}><Save/> Save Promotion</button></div></form></div> : null}
 
-    {eventForm ? <div className="admin-modal-bg"><form className="admin-modal" onSubmit={saveEvent}><div className="admin-modal-head"><div><span>EVENT EDITOR</span><h2>{eventForm.id?'Event ပြင်မယ်':'Event အသစ်ထည့်မယ်'}</h2></div><button type="button" onClick={()=>setEventForm(null)}><X/></button></div><div className="admin-form-grid"><Field label="Image" full><UploadField value={eventForm.image} onChange={(value)=>setEventForm({...eventForm,image:value})} onBusy={setUploading}/></Field><Field label="Event Title"><input required value={eventForm.title} onChange={(event)=>setEventForm({...eventForm,title:event.target.value})}/></Field><Field label="Date / Status"><input value={eventForm.date} onChange={(event)=>setEventForm({...eventForm,date:event.target.value})}/></Field><Field label="Description" full><textarea rows="5" value={eventForm.description} onChange={(event)=>setEventForm({...eventForm,description:event.target.value})}/></Field><Field label="Event Link" full><input value={eventForm.link} onChange={(event)=>setEventForm({...eventForm,link:event.target.value})}/></Field><Field label="Display Order"><input type="number" value={eventForm.order} onChange={(event)=>setEventForm({...eventForm,order:Number(event.target.value)})}/></Field><label className="switch-field"><input type="checkbox" checked={eventForm.active} onChange={(event)=>setEventForm({...eventForm,active:event.target.checked})}/><span/> Customer ကိုပြမယ်</label></div><div className="admin-modal-actions"><button type="button" className="admin-secondary" onClick={()=>setEventForm(null)}>Cancel</button><button className="admin-primary" disabled={saving||uploading}><Save/> Save Event</button></div></form></div> : null}
+    {eventForm ? <div className="admin-modal-bg"><form className="admin-modal" onSubmit={saveEvent}><div className="admin-modal-head"><div><span>EVENT EDITOR</span><h2>{eventForm.id?'Event ပြင်မယ်':'Event အသစ်ထည့်မယ်'}</h2></div><button type="button" onClick={()=>setEventForm(null)}><X/></button></div><div className="admin-form-grid"><Field label="Image" full><UploadField value={eventForm.image} onChange={(value)=>setEventForm({...eventForm,image:value})} onBusy={onUploadBusy}/></Field><Field label="Event Title"><input required value={eventForm.title} onChange={(event)=>setEventForm({...eventForm,title:event.target.value})}/></Field><Field label="Date / Status"><input value={eventForm.date} onChange={(event)=>setEventForm({...eventForm,date:event.target.value})}/></Field><Field label="Description" full><textarea rows="5" value={eventForm.description} onChange={(event)=>setEventForm({...eventForm,description:event.target.value})}/></Field><Field label="Event Link" full><input value={eventForm.link} onChange={(event)=>setEventForm({...eventForm,link:event.target.value})}/></Field><Field label="Display Order"><input type="number" value={eventForm.order} onChange={(event)=>setEventForm({...eventForm,order:Number(event.target.value)})}/></Field><label className="switch-field"><input type="checkbox" checked={eventForm.active} onChange={(event)=>setEventForm({...eventForm,active:event.target.checked})}/><span/> Customer ကိုပြမယ်</label></div><div className="admin-modal-actions"><button type="button" className="admin-secondary" onClick={()=>setEventForm(null)}>Cancel</button><button className="admin-primary" disabled={saving||uploading}><Save/> Save Event</button></div></form></div> : null}
   </div>;
 }

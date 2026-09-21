@@ -12,6 +12,25 @@ function getGameUrl(value) {
   }
 }
 
+function getBackgroundUrl(value) {
+  if (typeof value !== 'string') return '';
+  const text = value.trim();
+  if (/[\\\x00-\x1f\x7f]/.test(text)) return '';
+  if (text.startsWith('/') && !text.startsWith('//')) return text;
+  return getGameUrl(text);
+}
+
+function BackgroundImage({ desktop, mobile }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <picture className={`bkk-entry-background${loaded ? ' is-loaded' : ''}`} aria-hidden="true">
+      <source media="(max-width: 760px)" srcSet={mobile || desktop} />
+      <img src={desktop || mobile} alt="" decoding="async" fetchPriority="high"
+        onLoad={() => setLoaded(true)} onError={() => setLoaded(false)} />
+    </picture>
+  );
+}
+
 function OrnamentalCorner({ position }) {
   return (
     <svg className={`bkk-entry-corner bkk-entry-corner-${position}`} viewBox="0 0 110 110" fill="none" aria-hidden="true" focusable="false">
@@ -75,6 +94,11 @@ export default function App() {
     ? settings.brand.trim()
     : 'BKK';
   const lineId = typeof settings?.lineId === 'string' ? settings.lineId.trim() : '';
+  const welcome = typeof settings?.landingWelcome === 'string' && settings.landingWelcome.trim()
+    ? settings.landingWelcome.trim()
+    : 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။';
+  const backgroundDesktop = getBackgroundUrl(settings?.backgroundDesktop);
+  const backgroundMobile = getBackgroundUrl(settings?.backgroundMobile);
   const renderWatermark = (key) => (
     <span className="bkk-entry-watermark" key={key}>
       <span>Line ID :</span>{' '}<b>{lineId}</b>
@@ -83,6 +107,9 @@ export default function App() {
 
   return (
     <main className="bkk-entry-page" lang="my">
+      {(backgroundDesktop || backgroundMobile) && (
+        <BackgroundImage key={`${backgroundDesktop}|${backgroundMobile}`} desktop={backgroundDesktop} mobile={backgroundMobile} />
+      )}
       <div className="bkk-entry-lights" aria-hidden="true">
         <span /><span /><span /><span /><span /><span />
       </div>
@@ -110,17 +137,12 @@ export default function App() {
             <circle cx="33" cy="11" r="2" fill="currentColor" />
           </svg>
         </div>
-        <p className="bkk-entry-welcome" lang="en">WELCOME</p>
+        <p className="bkk-entry-welcome">{welcome}</p>
         <h1 className="bkk-entry-brand" id="bkk-entry-heading">{brand}</h1>
         <div className="bkk-entry-divider" aria-hidden="true"><span /></div>
-        <p className="bkk-entry-intro">
-          <span>ထိုင်းရောက်ရွှေမြန်မာများအတွက်</span>{' '}
-          <span>အကောင်းဆုံးနံပတ်တစ် ဝက်ဆိုက်သို့ဝင်ရန်</span>
-        </p>
-        <p className="bkk-entry-description">အောက်ပါခလုတ်ကို နှိပ်ပါ။</p>
         {status === 'ready' ? (
           <a className="bkk-entry-button" href={getGameUrl(settings.gameUrl)}>
-            <span>ဝင်ရန် နှိပ်ပါ</span>
+            <span>ဝင်ရန်နှိပ်ပါ</span>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -133,14 +155,13 @@ export default function App() {
             aria-busy={status === 'loading'}
             onClick={() => setAttempt((value) => value + 1)}
           >
-            <span>{status === 'error' ? 'ပြန်စမ်းရန်' : 'ဝင်ရန် နှိပ်ပါ'}</span>
+            <span>{status === 'error' ? 'ပြန်စမ်းရန်' : 'ဝင်ရန်နှိပ်ပါ'}</span>
             {status === 'loading' && <span className="bkk-entry-spinner" aria-hidden="true" />}
           </button>
         )}
         <p className="bkk-entry-status" role="status" aria-live="polite">
           {status === 'error' ? 'ချိတ်ဆက်မှု မရသေးပါ။ ပြန်စမ်းကြည့်ပါ။' : ''}
         </p>
-        <div className="bkk-entry-signoff" aria-hidden="true"><span /> {brand} OFFICIAL <span /></div>
       </div>
     </main>
   );
