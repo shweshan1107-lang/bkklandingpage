@@ -130,7 +130,16 @@ app.use(
 
 function readSite() {
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    return {
+      ...data,
+      settings: {
+        landingWelcome: 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။',
+        backgroundDesktop: '',
+        backgroundMobile: '',
+        ...data.settings
+      }
+    };
   } catch (error) {
     console.error('site.json ဖတ်မရပါ:', error.message);
     throw new Error('Website data မဖတ်နိုင်ပါ');
@@ -156,6 +165,21 @@ function cleanUrl(value) {
   if (!text) return '';
   if (text.startsWith('/') || /^https?:\/\//i.test(text)) return text;
   throw new Error('Link က http://, https:// သို့မဟုတ် / နဲ့စရပါမယ်');
+}
+
+function cleanBackgroundUrl(value) {
+  if (typeof value !== 'string') throw new Error('Background image must be an image URL.');
+  const text = value.trim();
+  if (!text) return '';
+  if (text.length > 2000 || /[\\\x00-\x1f\x7f]/.test(text)) {
+    throw new Error('Invalid background image URL.');
+  }
+  if (text.startsWith('/') && !text.startsWith('//')) return text;
+  try {
+    const url = new URL(text);
+    if (['https:', 'http:'].includes(url.protocol) && !url.username && !url.password) return url.href;
+  } catch {}
+  throw new Error('Use an uploaded image or an http:// or https:// image URL.');
 }
 
 function sortVisible(items = []) {
@@ -219,6 +243,7 @@ app.get('/api/health', (_req, res) => {
 
 app.get('/api/public/site', (_req, res) => {
   const data = readSite();
+  res.setHeader('Cache-Control', 'no-store');
 
   res.json({
     ok: true,
@@ -265,6 +290,9 @@ app.put('/api/admin/settings', auth, (req, res) => {
       brand: cleanText(input.brand, 40),
       brandLong: cleanText(input.brandLong, 80),
       lineId: cleanText(input.lineId, 80),
+      landingWelcome: cleanText(input.landingWelcome ?? data.settings.landingWelcome, 180) || 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။',
+      backgroundDesktop: cleanBackgroundUrl(input.backgroundDesktop === undefined ? data.settings.backgroundDesktop : input.backgroundDesktop),
+      backgroundMobile: cleanBackgroundUrl(input.backgroundMobile === undefined ? data.settings.backgroundMobile : input.backgroundMobile),
       heroKicker: cleanText(input.heroKicker, 150),
       heroTitleTop: cleanText(input.heroTitleTop, 80),
       heroTitleBottom: cleanText(input.heroTitleBottom, 120),
