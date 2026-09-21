@@ -1,233 +1,213 @@
 .bkk-entry-page {
-  --bkk-gold: #f4d394;
-  --bkk-cream: #fff0d7;
+  --bkk-gold: #f1cf85;
+  --bkk-cream: #fff5e1;
   box-sizing: border-box;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 590px);
+  grid-template-columns: minmax(0, 860px);
   place-content: center;
   place-items: center;
   width: 100%;
   min-height: 100vh;
   min-height: 100svh;
   overflow: hidden;
-  padding: 60px 32px;
-  padding-top: max(60px, env(safe-area-inset-top));
-  padding-bottom: max(60px, env(safe-area-inset-bottom));
+  padding: 64px 32px;
+  padding-top: max(64px, env(safe-area-inset-top));
+  padding-bottom: max(64px, env(safe-area-inset-bottom));
   color: var(--bkk-cream);
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(184, 72, 59, .42), transparent 68%),
-    radial-gradient(ellipse at 0% 100%, rgba(169, 58, 46, .3), transparent 56%),
-    linear-gradient(135deg, #79241f, #8c2d27 48%, #70221e);
+    radial-gradient(ellipse at 18% 30%, rgba(144, 18, 46, .65), transparent 60%),
+    radial-gradient(ellipse at 88% 76%, rgba(109, 18, 41, .55), transparent 55%),
+    #16080f;
   font-family: Arial, 'Myanmar Text', 'Noto Sans Myanmar', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-
 .bkk-entry-page *,
 .bkk-entry-page *::before,
 .bkk-entry-page *::after { box-sizing: border-box; }
 
 .bkk-entry-background {
-  position: absolute; inset: 0; z-index: -2;
+  position: absolute;
+  inset: 0;
+  z-index: -2;
   pointer-events: none;
   opacity: 0;
-  transition: opacity .35s ease;
+  transition: opacity .4s ease;
 }
 .bkk-entry-background.is-loaded { opacity: 1; }
-.bkk-entry-background img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.bkk-entry-background::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(38, 9, 7, .08), rgba(38, 9, 7, .2));
+.bkk-entry-background img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
-
-.bkk-entry-page::before,
-.bkk-entry-page::after {
-  content: '';
+.bkk-entry-shade {
   position: absolute;
+  inset: 0;
   z-index: -1;
-  width: min(76vw, 1050px);
-  aspect-ratio: 1;
-  border: 1px solid rgba(240, 190, 118, .1);
-  border-radius: 50%;
   pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(12, 3, 10, .76) 0%, rgba(12, 3, 10, .48) 38%, transparent 76%),
+    linear-gradient(180deg, rgba(10, 2, 7, .22), rgba(10, 2, 7, .08) 40%, rgba(10, 2, 7, .4));
 }
-.bkk-entry-page::before {
-  top: -68%; left: -24%;
-  box-shadow: 0 0 0 48px rgba(231, 178, 107, .02), 0 0 0 49px rgba(231, 178, 107, .035);
-}
-.bkk-entry-page::after {
-  right: -30%; bottom: -68%;
-  box-shadow: 0 0 0 64px rgba(231, 178, 107, .02), 0 0 0 65px rgba(231, 178, 107, .035);
-}
-
-.bkk-entry-lights {
-  position: absolute; inset: 0; z-index: -1;
-  overflow: hidden; pointer-events: none;
-}
-.bkk-entry-lights span {
-  position: absolute;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: #edc67f;
-  box-shadow: 0 0 16px rgba(244, 201, 124, .5);
-  opacity: .46;
-  animation: bkk-entry-glimmer 5s ease-in-out infinite alternate;
-}
-.bkk-entry-lights span::after {
-  content: '';
-  position: absolute; top: 0; left: 16px;
-  width: 110px; height: 1px;
-  background: linear-gradient(90deg, rgba(244, 201, 124, .38), transparent);
-  transform: rotate(28deg); transform-origin: left;
-}
-.bkk-entry-lights span:nth-child(1) { top: 18%; left: 12%; }
-.bkk-entry-lights span:nth-child(2) { top: 66%; left: 8%; animation-delay: -2s; }
-.bkk-entry-lights span:nth-child(3) { top: 84%; left: 26%; animation-delay: -3s; }
-.bkk-entry-lights span:nth-child(4) { top: 22%; right: 14%; animation-delay: -1s; }
-.bkk-entry-lights span:nth-child(5) { top: 76%; right: 10%; animation-delay: -4s; }
-.bkk-entry-lights span:nth-child(6) { top: 10%; left: 67%; animation-delay: -2.5s; }
-
-.bkk-entry-panel {
+.bkk-entry-hero {
+  width: 100%;
   position: relative;
   z-index: 1;
-  width: min(100%, 590px);
-  padding: 46px 48px 66px;
-  border: 1px solid rgba(241, 199, 124, .7);
-  border-radius: 30px;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(181, 61, 86, .16), transparent 64%),
-    linear-gradient(150deg, #7b2034, #68182c 64%, #551424);
-  box-shadow: 0 26px 70px rgba(30, 3, 12, .4), 0 0 0 4px rgba(235, 188, 118, .045), inset 0 1px 0 rgba(255, 224, 168, .18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-}
-.bkk-entry-panel::before {
-  content: '';
-  position: absolute; inset: 9px;
-  border: 1px solid rgba(239, 195, 118, .23);
-  border-radius: 22px; pointer-events: none;
-}
-.bkk-entry-corner {
-  position: absolute;
-  width: 110px; height: 110px;
-  color: #e8c387;
-  opacity: .86;
-  pointer-events: none;
-  filter: drop-shadow(0 1px 2px rgba(71, 22, 10, .22));
-}
-.bkk-entry-corner-tl { top: 13px; left: 13px; }
-.bkk-entry-corner-tr { top: 13px; right: 13px; transform: scaleX(-1); }
-.bkk-entry-corner-bl { bottom: 13px; left: 13px; transform: scaleY(-1); }
-.bkk-entry-corner-br { bottom: 13px; right: 13px; transform: scale(-1); }
-.bkk-entry-corner-bl, .bkk-entry-corner-br { width: 80px; height: 80px; }
-.bkk-entry-emblem {
-  display: grid; place-items: center;
-  width: 70px; height: 70px;
-  margin: 0 auto 22px;
-  border: 1px solid rgba(236, 193, 116, .55);
-  border-radius: 50%;
-  color: var(--bkk-gold);
-  background: radial-gradient(circle at 40% 25%, #96374b, #68192d);
-  box-shadow: 0 0 0 5px rgba(244, 205, 138, .035), inset 0 1px 0 rgba(255, 227, 178, .12);
+  animation: bkk-entry-appear .65s ease-out both;
 }
 .bkk-entry-welcome {
-  margin: 0 0 24px;
-  color: #ffebc9;
-  font-size: 21px; line-height: 2; font-weight: 400;
-  text-wrap: balance; overflow-wrap: anywhere;
+  max-width: 680px;
+  margin: 0 0 28px;
+  color: #fff2dc;
+  font-size: clamp(17px, 2vw, 23px);
+  line-height: 2;
+  font-weight: 400;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .9), 0 0 30px rgba(0, 0, 0, .65);
+}
+.bkk-entry-brand-stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  padding: 0 0 52px;
+  margin-bottom: 38px;
+}
+.bkk-entry-brand-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  width: min(68%, 410px);
+  height: 20px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(243, 179, 103, .27), rgba(160, 34, 50, .12) 43%, transparent 72%);
+  filter: blur(4px);
+  z-index: -1;
+  pointer-events: none;
 }
 .bkk-entry-brand {
   margin: 0;
-  color: var(--bkk-gold);
+  padding-right: .055em;
+  color: #ffe6af;
   font-family: Arial, 'Myanmar Text', 'Noto Sans Myanmar', sans-serif;
-  font-size: clamp(68px, 10vw, 104px);
-  font-weight: 700; line-height: 1.2; letter-spacing: .045em;
+  font-size: clamp(104px, 17vw, 208px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: -.055em;
   overflow-wrap: anywhere;
-  text-shadow: 0 3px 25px rgba(227, 171, 82, .12);
+  filter: drop-shadow(0 5px 0 rgba(109, 57, 26, .48)) drop-shadow(0 18px 22px rgba(0, 0, 0, .5));
+  animation: bkk-entry-float 6s ease-in-out infinite;
+  will-change: transform;
 }
+.bkk-entry-brand-long { font-size: clamp(48px, 8vw, 104px); line-height: 1.3; letter-spacing: -.035em; }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .bkk-entry-brand {
-    background: linear-gradient(175deg, #fff5d7 10%, #f4d395 49%, #c79343 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
+    background: linear-gradient(175deg, #fffdf6 18%, #ffe6ad 49%, #dfa956 82%, #b87836);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-}
-.bkk-entry-divider {
-  display: flex; align-items: center; justify-content: center;
-  gap: 12px; margin: 26px auto 34px;
-}
-.bkk-entry-divider::before,
-.bkk-entry-divider::after {
-  content: ''; width: 62px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(242, 198, 125, .6));
-}
-.bkk-entry-divider::after { transform: rotate(180deg); }
-.bkk-entry-divider span {
-  width: 5px; height: 5px; background: #e9c081; transform: rotate(45deg);
 }
 .bkk-entry-button {
   position: relative;
-  display: flex; align-items: center; justify-content: center;
-  gap: 16px; width: 100%; min-height: 88px;
-  margin: 0; padding: 16px 22px;
-  border: 1px solid #ffe5af; border-radius: 14px;
-  background: linear-gradient(110deg, #ffedb5 0%, #edc675 58%, #d8a84c 100%);
-  box-shadow: 0 8px 30px rgba(217, 163, 64, .16), inset 0 1px 0 rgba(255, 249, 226, .75);
-  color: #511329; font-family: inherit; font-size: 26px; font-weight: 700;
-  line-height: 1.8; text-decoration: none; cursor: pointer;
-  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-  transition: transform .18s ease, box-shadow .18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  width: min(100%, 390px);
+  min-height: 84px;
+  margin: 0;
+  padding: 16px 24px;
+  border: 1px solid rgba(255, 240, 198, .9);
+  border-radius: 999px;
+  background: linear-gradient(110deg, #fff0be, #f0ce84 58%, #dbad57);
+  color: #40111f;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .4), 0 0 34px rgba(238, 187, 100, .13), inset 0 1px 0 #fff5d8;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.8;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
-.bkk-entry-button svg,
-.bkk-entry-spinner { flex-shrink: 0; }
-.bkk-entry-button:focus-visible { outline: 3px solid #fff4d2; outline-offset: 5px; }
+.bkk-entry-button-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(58, 13, 29, .1);
+  transition: transform .2s ease;
+}
+.bkk-entry-button:focus-visible { outline: 3px solid #fff4d2; outline-offset: 6px; }
 .bkk-entry-button:active:not(:disabled) { transform: translateY(1px); }
 .bkk-entry-button:disabled { cursor: wait; opacity: .75; }
-.bkk-entry-status { margin: 14px 0 0; color: #f3d1ca; font-size: 13px; line-height: 2; }
+.bkk-entry-status {
+  max-width: 440px;
+  margin: 20px 0 0;
+  color: #ffe3d5;
+  font-size: 14px;
+  line-height: 2;
+  text-shadow: 0 2px 8px #16050c;
+}
 .bkk-entry-status:empty { margin: 0; }
 .bkk-entry-spinner {
-  width: 18px; height: 18px;
-  border: 2px solid rgba(89, 12, 6, .2); border-top-color: currentColor;
-  border-radius: 50%; animation: bkk-entry-spin .8s linear infinite;
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border: 2px solid rgba(64, 17, 31, .2);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: bkk-entry-spin .8s linear infinite;
+}
+@keyframes bkk-entry-appear {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bkk-entry-float {
+  0%, 100% { transform: translateY(3px); }
+  50% { transform: translateY(-7px); }
 }
 @keyframes bkk-entry-spin { to { transform: rotate(360deg); } }
-@keyframes bkk-entry-glimmer { to { opacity: .16; } }
 @media (hover: hover) {
   .bkk-entry-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(217, 163, 64, .26), inset 0 1px 0 rgba(255, 249, 226, .75);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, .45), 0 0 44px rgba(238, 187, 100, .24), inset 0 1px 0 #fff5d8;
   }
+  .bkk-entry-button:hover .bkk-entry-button-icon { transform: translateX(3px); }
 }
 @media (max-width: 600px) {
   .bkk-entry-page {
-    padding: 45px 18px;
-    padding-top: max(45px, env(safe-area-inset-top));
-    padding-bottom: max(45px, env(safe-area-inset-bottom));
+    padding: 48px 24px;
+    padding-top: max(48px, env(safe-area-inset-top));
+    padding-bottom: max(48px, env(safe-area-inset-bottom));
   }
-  .bkk-entry-panel { padding: 34px 24px 48px; border-radius: 25px; }
-  .bkk-entry-panel::before { inset: 7px; border-radius: 19px; }
-  .bkk-entry-corner { width: 72px; height: 72px; }
-  .bkk-entry-corner-tl, .bkk-entry-corner-tr { top: 11px; }
-  .bkk-entry-corner-bl, .bkk-entry-corner-br { bottom: 11px; }
-  .bkk-entry-corner-bl, .bkk-entry-corner-br { width: 60px; height: 60px; }
-  .bkk-entry-corner-tl, .bkk-entry-corner-bl { left: 11px; }
-  .bkk-entry-corner-tr, .bkk-entry-corner-br { right: 11px; }
-  .bkk-entry-emblem { width: 62px; height: 62px; margin-bottom: 20px; }
-  .bkk-entry-welcome { font-size: 17px; margin-bottom: 20px; }
-  .bkk-entry-button { min-height: 76px; padding: 16px; font-size: 23px; gap: 12px; }
+  .bkk-entry-welcome { max-width: 350px; margin-bottom: 24px; font-size: 17px; }
+  .bkk-entry-brand-stage { padding-bottom: 38px; margin-bottom: 30px; }
+  .bkk-entry-brand { font-size: clamp(104px, 28vw, 160px); }
+  .bkk-entry-brand-long { font-size: clamp(42px, 10vw, 60px); }
+  .bkk-entry-button { width: min(100%, 340px); min-height: 76px; padding: 14px 20px; font-size: 22px; gap: 16px; }
+  .bkk-entry-button-icon { width: 34px; height: 34px; }
 }
-@media (max-width: 600px) and (max-height: 700px) {
+@media (max-height: 600px) {
   .bkk-entry-page { padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(28px, env(safe-area-inset-bottom)); }
-  .bkk-entry-panel { padding: 26px 22px 40px; }
-  .bkk-entry-emblem { width: 52px; height: 52px; margin-bottom: 12px; }
-  .bkk-entry-welcome { font-size: 16px; margin-bottom: 16px; }
-  .bkk-entry-brand { font-size: 64px; }
-  .bkk-entry-divider { margin-top: 20px; margin-bottom: 24px; }
-  .bkk-entry-button { min-height: 72px; padding-top: 14px; padding-bottom: 14px; }
-  .bkk-entry-corner { width: 60px; height: 60px; }
-  .bkk-entry-corner-bl, .bkk-entry-corner-br { width: 50px; height: 50px; }
+  .bkk-entry-welcome { margin-bottom: 16px; }
+  .bkk-entry-brand { font-size: clamp(88px, 15vw, 132px); }
+  .bkk-entry-brand-long { font-size: clamp(36px, 7vw, 60px); }
+  .bkk-entry-brand-stage { padding-bottom: 24px; margin-bottom: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bkk-entry-button, .bkk-entry-background { transition: none; }
-  .bkk-entry-spinner,
-  .bkk-entry-lights span { animation: none; }
+  .bkk-entry-hero, .bkk-entry-brand, .bkk-entry-spinner { animation: none; }
+  .bkk-entry-brand { will-change: auto; }
+  .bkk-entry-background, .bkk-entry-button, .bkk-entry-button-icon { transition: none; }
 }
