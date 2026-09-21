@@ -93,17 +93,11 @@ export default function App() {
   const brand = typeof settings?.brand === 'string' && settings.brand.trim()
     ? settings.brand.trim()
     : 'BKK';
-  const lineId = typeof settings?.lineId === 'string' ? settings.lineId.trim() : '';
   const welcome = typeof settings?.landingWelcome === 'string' && settings.landingWelcome.trim()
     ? settings.landingWelcome.trim()
     : 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။';
   const backgroundDesktop = getBackgroundUrl(settings?.backgroundDesktop);
   const backgroundMobile = getBackgroundUrl(settings?.backgroundMobile);
-  const renderWatermark = (key) => (
-    <span className="bkk-entry-watermark" key={key}>
-      <span>Line ID :</span>{' '}<b>{lineId}</b>
-    </span>
-  );
 
   return (
     <main className="bkk-entry-page" lang="my">
@@ -113,19 +107,6 @@ export default function App() {
       <div className="bkk-entry-lights" aria-hidden="true">
         <span /><span /><span /><span /><span /><span />
       </div>
-      {lineId && (
-        <div className="bkk-entry-watermarks" aria-hidden="true">
-          <div className="bkk-entry-watermark-pattern">
-            <div className="bkk-entry-watermark-motion">
-              {Array.from({ length: 18 }, (_, row) => (
-                <div className="bkk-entry-watermark-row" key={row}>
-                  {Array.from({ length: 10 }, (_, index) => renderWatermark(index))}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
       <div className="bkk-entry-panel" aria-labelledby="bkk-entry-heading">
         {['tl', 'tr', 'bl', 'br'].map((position) => <OrnamentalCorner key={position} position={position} />)}
         <div className="bkk-entry-emblem" aria-hidden="true">
