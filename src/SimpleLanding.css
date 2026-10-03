@@ -5,6 +5,13 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'BKK Myanmar';
+  src: url('/landing-assets/myanmar-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 .bkk-entry-page {
   position: relative;
   isolation: isolate;
@@ -33,19 +40,19 @@
 }
 .bkk-entry-welcome {
   position: absolute;
-  top: 29.45%; left: 7%;
+  top: 29.7%; left: 7%;
   display: grid;
   place-items: center;
-  width: 86%; min-height: 5.6%;
+  width: 86%; min-height: 4.8%;
   margin: 0;
-  font-size: 5.8cqw;
-  line-height: 1.9;
-  font-weight: 400;
+  font-size: 3.8cqw;
+  line-height: 1.75;
+  font-weight: 700;
   text-wrap: balance;
   overflow-wrap: anywhere;
   text-shadow: 0 2px 1px rgba(0,0,0,.35);
 }
-.bkk-entry-welcome > span { display: block; width: 160%; margin-inline: -30%; transform: scaleX(.61); }
+.bkk-entry-welcome > span { display: block; max-width: 100%; }
 .bkk-entry-logo {
   position: absolute;
   top: 43.44%; left: 10.28%;
@@ -67,8 +74,8 @@
   box-shadow: 0 4px 0 rgba(116,22,6,.7), inset 0 1px 0 #fff1b9;
   color: #070500;
   font-family: inherit;
-  font-weight: 400;
-  font-size: 7cqw;
+  font-weight: 700;
+  font-size: 5.8cqw;
   line-height: 1.5;
   text-decoration: none;
   cursor: pointer;
@@ -76,27 +83,27 @@
   -webkit-tap-highlight-color: transparent;
   transition: filter .18s, transform .18s;
 }
-.bkk-entry-button > span { display: block; transform: translateY(.04em) scaleX(.67); }
+.bkk-entry-button > span { display: block; transform: translateY(.05em); }
 .bkk-entry-button:focus-visible { outline: 3px solid white; outline-offset: 5px; }
 .bkk-entry-button:active:not(:disabled) { transform: translateY(2px); }
 .bkk-entry-button:disabled { cursor: wait; }
 .bkk-entry-hand { position: absolute; right: 10.5%; top: 65%; width: 12.8%; aspect-ratio: 892 / 865; pointer-events: none; filter: drop-shadow(0 2px 4px #815907); }
 .bkk-entry-hint {
-  position: absolute; top: 75%; left: 8%; width: 84%;
-  margin: 0; font-size: max(12px, 3.8cqw); line-height: 1.9; font-weight: 400;
+  position: absolute; top: 75.2%; left: 8%; width: 84%;
+  margin: 0; font-size: max(12px, 2.65cqw); line-height: 1.85; font-weight: 700;
   text-wrap: balance; overflow-wrap: anywhere;
 }
-.bkk-entry-hint > span { display: block; width: 140%; margin-inline: -20%; transform: scaleX(.6); }
+.bkk-entry-hint > span { display: block; max-width: 100%; }
 .bkk-entry-status { position: absolute; top: 83%; left: 8%; width: 84%; margin: 0; font-size: max(12px, 2.5cqw); line-height: 1.8; }
 .bkk-entry-status:empty { display: none; }
 /* Keep the reference layout readable on wider screens. */
 @media (min-aspect-ratio: 1/1) {
   .bkk-entry-hero { width: min(720px, 82vw, 96svh); min-width: 0; aspect-ratio: 1 / 1; }
-  .bkk-entry-welcome { top: 15%; font-size: 5.4cqw; }
+  .bkk-entry-welcome { top: 15%; font-size: 3.7cqw; }
   .bkk-entry-logo { top: 32%; height: 24%; }
   .bkk-entry-action { top: 61%; height: 10%; }
-  .bkk-entry-button { font-size: 5.7cqw; }
-  .bkk-entry-hint { top: 78%; font-size: max(12px, 3.5cqw); }
+  .bkk-entry-button { font-size: 4.8cqw; }
+  .bkk-entry-hint { top: 76.5%; font-size: max(12px, 2.65cqw); }
   .bkk-entry-status { top: 90%; }
 }
 @media (max-width: 760px) and (max-aspect-ratio: 9/16) {
