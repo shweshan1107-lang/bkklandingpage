@@ -323,3 +323,9 @@
   .admin-background-preview { height: 200px; }
   .admin-background-actions > * { flex: 1 1 auto; }
 }
+.admin-reference-preset { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.3rem; margin: 0 0 1.2rem; border: 1px solid var(--admin-line); border-radius: 1rem; background: rgba(244,201,93,.045); }
+.admin-reference-preset p { margin: .4rem 0 0; font-size: .85rem; line-height: 1.7; color: var(--admin-muted); }
+.admin-reference-preset button { flex-shrink: 0; }
+.admin-artwork-preview { padding: 20px; background: #4a1019; }
+.admin-artwork-image { display: block; width: 100%; height: 100%; }
+@media (max-width: 600px) { .admin-reference-preset { flex-direction: column; align-items: stretch; } }

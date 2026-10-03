@@ -1,213 +1,106 @@
+@font-face {
+  font-family: 'BKK Myanmar';
+  src: url('/landing-assets/myanmar-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 .bkk-entry-page {
-  --bkk-gold: #f1cf85;
-  --bkk-cream: #fff5e1;
-  box-sizing: border-box;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 860px);
-  place-content: center;
   place-items: center;
-  width: 100%;
   min-height: 100vh;
   min-height: 100svh;
   overflow: hidden;
-  padding: 64px 32px;
-  padding-top: max(64px, env(safe-area-inset-top));
-  padding-bottom: max(64px, env(safe-area-inset-bottom));
-  color: var(--bkk-cream);
-  background:
-    radial-gradient(ellipse at 18% 30%, rgba(144, 18, 46, .65), transparent 60%),
-    radial-gradient(ellipse at 88% 76%, rgba(109, 18, 41, .55), transparent 55%),
-    #16080f;
-  font-family: Arial, 'Myanmar Text', 'Noto Sans Myanmar', sans-serif;
+  color: #fff;
+  background: radial-gradient(ellipse at 50% 43%, #870e19, #4c0c10 52%, #210403);
+  font-family: Arial, 'BKK Myanmar', 'Myanmar Text', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-.bkk-entry-page *,
-.bkk-entry-page *::before,
-.bkk-entry-page *::after { box-sizing: border-box; }
-
-.bkk-entry-background {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .4s ease;
-}
+.bkk-entry-page *, .bkk-entry-page *::before, .bkk-entry-page *::after { box-sizing: border-box; }
+.bkk-entry-background { position: absolute; inset: 0; z-index: -1; opacity: 0; pointer-events: none; }
 .bkk-entry-background.is-loaded { opacity: 1; }
-.bkk-entry-background img {
-  display: block;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.bkk-entry-shade {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at center, rgba(12, 3, 10, .76) 0%, rgba(12, 3, 10, .48) 38%, transparent 76%),
-    linear-gradient(180deg, rgba(10, 2, 7, .22), rgba(10, 2, 7, .08) 40%, rgba(10, 2, 7, .4));
-}
+.bkk-entry-background img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+/* Positions follow the supplied 1080 x 1920 reference. */
 .bkk-entry-hero {
-  width: 100%;
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  container-type: inline-size;
+  width: min(100%, 56.25svh);
+  min-width: 280px;
+  aspect-ratio: 9 / 16;
   text-align: center;
-  animation: bkk-entry-appear .65s ease-out both;
 }
 .bkk-entry-welcome {
-  max-width: 680px;
-  margin: 0 0 28px;
-  color: #fff2dc;
-  font-size: clamp(17px, 2vw, 23px);
-  line-height: 2;
+  position: absolute;
+  top: 29.45%; left: 7%;
+  display: grid;
+  place-items: center;
+  width: 86%; min-height: 5.6%;
+  margin: 0;
+  font-size: 5.8cqw;
+  line-height: 1.9;
   font-weight: 400;
   text-wrap: balance;
   overflow-wrap: anywhere;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, .9), 0 0 30px rgba(0, 0, 0, .65);
+  text-shadow: 0 2px 1px rgba(0,0,0,.35);
 }
-.bkk-entry-brand-stage {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  padding: 0 0 52px;
-  margin-bottom: 38px;
-}
-.bkk-entry-brand-stage::after {
-  content: '';
+.bkk-entry-welcome > span { display: block; width: 160%; margin-inline: -30%; transform: scaleX(.61); }
+.bkk-entry-logo {
   position: absolute;
-  bottom: 6px;
-  left: 50%;
-  width: min(68%, 410px);
-  height: 20px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(243, 179, 103, .27), rgba(160, 34, 50, .12) 43%, transparent 72%);
-  filter: blur(4px);
-  z-index: -1;
-  pointer-events: none;
-}
-.bkk-entry-brand {
+  top: 43.44%; left: 10.28%;
+  width: 80.1%; height: 13.13%;
+  display: grid; place-items: center;
   margin: 0;
-  padding-right: .055em;
-  color: #ffe6af;
-  font-family: Arial, 'Myanmar Text', 'Noto Sans Myanmar', sans-serif;
-  font-size: clamp(104px, 17vw, 208px);
-  line-height: 1.08;
-  font-weight: 900;
-  letter-spacing: -.055em;
-  overflow-wrap: anywhere;
-  filter: drop-shadow(0 5px 0 rgba(109, 57, 26, .48)) drop-shadow(0 18px 22px rgba(0, 0, 0, .5));
-  animation: bkk-entry-float 6s ease-in-out infinite;
-  will-change: transform;
 }
-.bkk-entry-brand-long { font-size: clamp(48px, 8vw, 104px); line-height: 1.3; letter-spacing: -.035em; }
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-  .bkk-entry-brand {
-    background: linear-gradient(175deg, #fffdf6 18%, #ffe6ad 49%, #dfa956 82%, #b87836);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
+.bkk-entry-artwork { display: block; width: 100%; height: 100%; overflow: hidden; }
+.bkk-entry-brand { color: #ffe088; font: 900 22cqw/1 Arial, sans-serif; text-shadow: 0 3px 2px #68340b; overflow-wrap: anywhere; }
+.bkk-entry-action { position: absolute; top: 65.36%; left: 18.65%; width: 63.3%; height: 6.56%; }
 .bkk-entry-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-  width: min(100%, 390px);
-  min-height: 84px;
-  margin: 0;
-  padding: 16px 24px;
-  border: 1px solid rgba(255, 240, 198, .9);
+  display: flex; justify-content: center; align-items: center;
+  width: 100%; height: 100%; min-height: 44px;
+  padding: 0 4%; margin: 0;
+  border: max(1px, .27cqw) solid #ffedac;
+  border-bottom-color: #f7d044;
   border-radius: 999px;
-  background: linear-gradient(110deg, #fff0be, #f0ce84 58%, #dbad57);
-  color: #40111f;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, .4), 0 0 34px rgba(238, 187, 100, .13), inset 0 1px 0 #fff5d8;
+  background: linear-gradient(180deg, #b5851e 0%, #f4d876 25%, #f6de83 46%, #e9c761 68%, #bb8b23 100%);
+  box-shadow: 0 4px 0 rgba(116,22,6,.7), inset 0 1px 0 #fff1b9;
+  color: #070500;
   font-family: inherit;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.8;
+  font-weight: 400;
+  font-size: 7cqw;
+  line-height: 1.5;
   text-decoration: none;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition: transform .2s ease, box-shadow .2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter .18s, transform .18s;
 }
-.bkk-entry-button-icon {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: rgba(58, 13, 29, .1);
-  transition: transform .2s ease;
+.bkk-entry-button > span { display: block; transform: translateY(.04em) scaleX(.67); }
+.bkk-entry-button:focus-visible { outline: 3px solid white; outline-offset: 5px; }
+.bkk-entry-button:active:not(:disabled) { transform: translateY(2px); }
+.bkk-entry-button:disabled { cursor: wait; }
+.bkk-entry-hand { position: absolute; right: 10.5%; top: 65%; width: 12.8%; aspect-ratio: 892 / 865; pointer-events: none; filter: drop-shadow(0 2px 4px #815907); }
+.bkk-entry-hint {
+  position: absolute; top: 75%; left: 8%; width: 84%;
+  margin: 0; font-size: max(12px, 3.8cqw); line-height: 1.9; font-weight: 400;
+  text-wrap: balance; overflow-wrap: anywhere;
 }
-.bkk-entry-button:focus-visible { outline: 3px solid #fff4d2; outline-offset: 6px; }
-.bkk-entry-button:active:not(:disabled) { transform: translateY(1px); }
-.bkk-entry-button:disabled { cursor: wait; opacity: .75; }
-.bkk-entry-status {
-  max-width: 440px;
-  margin: 20px 0 0;
-  color: #ffe3d5;
-  font-size: 14px;
-  line-height: 2;
-  text-shadow: 0 2px 8px #16050c;
+.bkk-entry-hint > span { display: block; width: 140%; margin-inline: -20%; transform: scaleX(.6); }
+.bkk-entry-status { position: absolute; top: 83%; left: 8%; width: 84%; margin: 0; font-size: max(12px, 2.5cqw); line-height: 1.8; }
+.bkk-entry-status:empty { display: none; }
+/* Keep the reference layout readable on wider screens. */
+@media (min-aspect-ratio: 1/1) {
+  .bkk-entry-hero { width: min(720px, 82vw, 96svh); min-width: 0; aspect-ratio: 1 / 1; }
+  .bkk-entry-welcome { top: 15%; font-size: 5.4cqw; }
+  .bkk-entry-logo { top: 32%; height: 24%; }
+  .bkk-entry-action { top: 61%; height: 10%; }
+  .bkk-entry-button { font-size: 5.7cqw; }
+  .bkk-entry-hint { top: 78%; font-size: max(12px, 3.5cqw); }
+  .bkk-entry-status { top: 90%; }
 }
-.bkk-entry-status:empty { margin: 0; }
-.bkk-entry-spinner {
-  flex-shrink: 0;
-  width: 20px; height: 20px;
-  border: 2px solid rgba(64, 17, 31, .2);
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: bkk-entry-spin .8s linear infinite;
+@media (max-width: 760px) and (max-aspect-ratio: 9/16) {
+  .bkk-entry-hero { width: 100%; }
 }
-@keyframes bkk-entry-appear {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes bkk-entry-float {
-  0%, 100% { transform: translateY(3px); }
-  50% { transform: translateY(-7px); }
-}
-@keyframes bkk-entry-spin { to { transform: rotate(360deg); } }
-@media (hover: hover) {
-  .bkk-entry-button:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 44px rgba(0, 0, 0, .45), 0 0 44px rgba(238, 187, 100, .24), inset 0 1px 0 #fff5d8;
-  }
-  .bkk-entry-button:hover .bkk-entry-button-icon { transform: translateX(3px); }
-}
-@media (max-width: 600px) {
-  .bkk-entry-page {
-    padding: 48px 24px;
-    padding-top: max(48px, env(safe-area-inset-top));
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-  }
-  .bkk-entry-welcome { max-width: 350px; margin-bottom: 24px; font-size: 17px; }
-  .bkk-entry-brand-stage { padding-bottom: 38px; margin-bottom: 30px; }
-  .bkk-entry-brand { font-size: clamp(104px, 28vw, 160px); }
-  .bkk-entry-brand-long { font-size: clamp(42px, 10vw, 60px); }
-  .bkk-entry-button { width: min(100%, 340px); min-height: 76px; padding: 14px 20px; font-size: 22px; gap: 16px; }
-  .bkk-entry-button-icon { width: 34px; height: 34px; }
-}
-@media (max-height: 600px) {
-  .bkk-entry-page { padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(28px, env(safe-area-inset-bottom)); }
-  .bkk-entry-welcome { margin-bottom: 16px; }
-  .bkk-entry-brand { font-size: clamp(88px, 15vw, 132px); }
-  .bkk-entry-brand-long { font-size: clamp(36px, 7vw, 60px); }
-  .bkk-entry-brand-stage { padding-bottom: 24px; margin-bottom: 22px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bkk-entry-hero, .bkk-entry-brand, .bkk-entry-spinner { animation: none; }
-  .bkk-entry-brand { will-change: auto; }
-  .bkk-entry-background, .bkk-entry-button, .bkk-entry-button-icon { transition: none; }
-}
+@media (hover: hover) { .bkk-entry-button:hover { filter: brightness(1.07); } }
+@media (prefers-reduced-motion: reduce) { .bkk-entry-button { transition: none; } }

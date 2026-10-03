@@ -134,9 +134,13 @@ function readSite() {
     return {
       ...data,
       settings: {
-        landingWelcome: 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။',
-        backgroundDesktop: '',
-        backgroundMobile: '',
+        landingWelcome: 'BKK ထိုင်းရောက်ရွှေမြန်မာများကြိုဆိုပါသည်။',
+        landingButtonText: 'ဝင်ရန်နှိပ်ပါ',
+        landingHint: 'ဝင်ရန်နှိပ်ပြီးပါက 5 စက္ကန့်မျှစောင့်ဆိုင်းပေးပါ',
+        landingLogo: '/landing-assets/bkk-logo.png',
+        landingClickIcon: '/landing-assets/bkk-click.png',
+        backgroundDesktop: '/landing-assets/bkk-bg.png',
+        backgroundMobile: '/landing-assets/bkk-bg.png',
         ...data.settings
       }
     };
@@ -168,11 +172,11 @@ function cleanUrl(value) {
 }
 
 function cleanBackgroundUrl(value) {
-  if (typeof value !== 'string') throw new Error('Background image must be an image URL.');
+  if (typeof value !== 'string') throw new Error('Image must be an image URL.');
   const text = value.trim();
   if (!text) return '';
   if (text.length > 2000 || /[\\\x00-\x1f\x7f]/.test(text)) {
-    throw new Error('Invalid background image URL.');
+    throw new Error('Invalid image URL.');
   }
   if (text.startsWith('/') && !text.startsWith('//')) return text;
   try {
@@ -290,7 +294,11 @@ app.put('/api/admin/settings', auth, (req, res) => {
       brand: cleanText(input.brand, 40),
       brandLong: cleanText(input.brandLong, 80),
       lineId: cleanText(input.lineId, 80),
-      landingWelcome: cleanText(input.landingWelcome ?? data.settings.landingWelcome, 180) || 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။',
+      landingWelcome: cleanText(input.landingWelcome ?? data.settings.landingWelcome, 180) || 'BKK ထိုင်းရောက်ရွှေမြန်မာများကြိုဆိုပါသည်။',
+      landingButtonText: cleanText(input.landingButtonText ?? data.settings.landingButtonText, 40) || 'ဝင်ရန်နှိပ်ပါ',
+      landingHint: cleanText(input.landingHint ?? data.settings.landingHint, 180),
+      landingLogo: cleanBackgroundUrl(input.landingLogo === undefined ? data.settings.landingLogo : input.landingLogo),
+      landingClickIcon: cleanBackgroundUrl(input.landingClickIcon === undefined ? data.settings.landingClickIcon : input.landingClickIcon),
       backgroundDesktop: cleanBackgroundUrl(input.backgroundDesktop === undefined ? data.settings.backgroundDesktop : input.backgroundDesktop),
       backgroundMobile: cleanBackgroundUrl(input.backgroundMobile === undefined ? data.settings.backgroundMobile : input.backgroundMobile),
       heroKicker: cleanText(input.heroKicker, 150),

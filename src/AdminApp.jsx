@@ -19,6 +19,7 @@ import {
   X
 } from 'lucide-react';
 import { api, clearToken, getToken, saveToken } from './api.js';
+import LandingImage from './LandingImage.jsx';
 
 const emptyPromotion = {
   eyebrow: 'NEW PROMOTION', title: '', short: '', details: '', image: '', badge: 'NEW', buttonText: 'ယခုကစားမည်', link: '', active: true, order: 1
@@ -56,7 +57,7 @@ function UploadField({ value, onChange, onBusy }) {
   </div>;
 }
 
-function BackgroundUploadField({ id, title, hint, value, onChange, onBusy, disabled }) {
+function BackgroundUploadField({ id, title, hint, value, onChange, onBusy, disabled, artwork = false }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [previewFailed, setPreviewFailed] = useState(false);
@@ -94,10 +95,10 @@ function BackgroundUploadField({ id, title, hint, value, onChange, onBusy, disab
   return <article className="admin-background-card" aria-labelledby={`${id}-title`} aria-busy={busy}>
     <h3 id={`${id}-title`}>{title}</h3>
     <p>{hint}</p>
-    <div className="admin-background-preview">
+    <div className={`admin-background-preview${artwork ? ' admin-artwork-preview' : ''}`}>
       {value && !previewFailed
-        ? <img src={value} alt={`${title} preview`} onError={() => setPreviewFailed(true)} />
-        : <div><ImagePlus size={32}/><span>{previewFailed ? 'Image preview unavailable' : 'No background selected'}</span></div>}
+        ? artwork ? <LandingImage src={value} alt={`${title} preview`} className="admin-artwork-image" fallback={<span>Image preview unavailable</span>}/> : <img src={value} alt={`${title} preview`} onError={() => setPreviewFailed(true)} />
+        : <div><ImagePlus size={32}/><span>{previewFailed ? 'Image preview unavailable' : 'No image selected'}</span></div>}
     </div>
     <div className="admin-background-actions">
       <label className={`upload-button ${busy || disabled ? 'is-disabled' : ''}`}>
@@ -270,12 +271,20 @@ export default function AdminApp() {
       </section> : null}
 
       {tab==='settings' ? <section className="admin-section settings-section">
-        <div className="admin-section-head"><div><h2>Landing Page Settings</h2><p>Update the welcome card, links and background images.</p></div><button className="admin-primary" disabled={saving || Boolean(uploading)} aria-busy={saving} onClick={saveSettings}>{saving ? <LoaderCircle className="spin"/> : <Save/>} {saving ? 'Saving...' : uploading ? 'Uploading...' : 'Save Settings'}</button></div>
+        <div className="admin-section-head"><div><h2>Landing Page Settings</h2><p>Update the background, logo, click icon, text and game link.</p></div><button className="admin-primary" disabled={saving || Boolean(uploading)} aria-busy={saving} onClick={saveSettings}>{saving ? <LoaderCircle className="spin"/> : <Save/>} {saving ? 'Saving...' : uploading ? 'Uploading...' : 'Save Settings'}</button></div>
         <fieldset className="admin-settings-fields" disabled={saving}>
+          <div className="admin-reference-preset"><div><strong>Supplied BKK design</strong><p>Load the supplied images and reference text. Your game link stays the same. Then click Save Settings.</p></div><button type="button" className="admin-secondary" disabled={saving || Boolean(uploading)} onClick={() => setData(current => ({ ...current, settings: { ...current.settings,
+            landingWelcome: 'BKK ထိုင်းရောက်ရွှေမြန်မာများကြိုဆိုပါသည်။',
+            landingButtonText: 'ဝင်ရန်နှိပ်ပါ',
+            landingHint: 'ဝင်ရန်နှိပ်ပြီးပါက 5 စက္ကန့်မျှစောင့်ဆိုင်းပေးပါ',
+            backgroundDesktop: '/landing-assets/bkk-bg.png', backgroundMobile: '/landing-assets/bkk-bg.png',
+            landingLogo: '/landing-assets/bkk-logo.png', landingClickIcon: '/landing-assets/bkk-click.png'
+          }}))}>Use Reference Design</button></div>
           <div className="settings-card"><div className="admin-form-grid">
-            <Field label="Welcome Text" full><textarea rows="2" maxLength={180} value={data.settings.landingWelcome ?? 'BKK မြန်မာ မှ ကြိုဆိုပါသည်။'} onChange={(event)=>updateSetting('landingWelcome', event.target.value)}/></Field>
-            <Field label="Card Brand"><input maxLength={40} value={data.settings.brand || ''} onChange={(event)=>updateSetting('brand', event.target.value)}/></Field>
-            <Field label="LINE ID"><input maxLength={80} value={data.settings.lineId || ''} placeholder="@bkk1111" onChange={(event)=>updateSetting('lineId', event.target.value)}/></Field>
+            <Field label="Welcome Text" full><textarea rows="2" maxLength={180} value={data.settings.landingWelcome ?? 'BKK ထိုင်းရောက်ရွှေမြန်မာများကြိုဆိုပါသည်။'} onChange={(event)=>updateSetting('landingWelcome', event.target.value)}/></Field>
+            <Field label="Brand Name"><input maxLength={40} value={data.settings.brand || ''} onChange={(event)=>updateSetting('brand', event.target.value)}/></Field>
+            <Field label="Button Text"><input maxLength={40} value={data.settings.landingButtonText ?? 'ဝင်ရန်နှိပ်ပါ'} onChange={(event)=>updateSetting('landingButtonText', event.target.value)}/></Field>
+            <Field label="Text Below Button" full><textarea rows="2" maxLength={180} value={data.settings.landingHint ?? ''} onChange={(event)=>updateSetting('landingHint', event.target.value)}/></Field>
             <Field label="Game Link" full><div className="input-icon"><LinkIcon/><input value={data.settings.gameUrl || ''} onChange={(event)=>updateSetting('gameUrl', event.target.value)}/></div></Field>
           </div></div>
           <div className="admin-background-heading"><h2>Background Images</h2><p>Choose separate images for desktop and phone. JPG, PNG, WebP or GIF, up to 8 MB each.</p></div>
@@ -284,6 +293,12 @@ export default function AdminApp() {
             <BackgroundUploadField id="background-mobile" title="Phone Background" hint="Portrait image · recommended 1080 × 1920" value={data.settings.backgroundMobile || ''} onChange={(value)=>updateSetting('backgroundMobile', value)} onBusy={onUploadBusy} disabled={saving}/>
           </div>
           <p className="admin-background-note">Click Save Settings to apply changes. If only one image is set, it is used on both devices. With no images, the red background is shown.</p>
+          <div className="admin-background-heading"><h2>Logo &amp; Click Icon</h2><p>Upload a transparent PNG or WebP. Empty space around the artwork is fitted automatically.</p></div>
+          <div className="admin-background-grid">
+            <BackgroundUploadField id="landing-logo" title="Logo" hint="The large BKK artwork in the center" value={data.settings.landingLogo ?? '/landing-assets/bkk-logo.png'} onChange={(value)=>updateSetting('landingLogo', value)} onBusy={onUploadBusy} disabled={saving} artwork/>
+            <BackgroundUploadField id="landing-click-icon" title="Click Icon" hint="The hand beside the entry button" value={data.settings.landingClickIcon ?? '/landing-assets/bkk-click.png'} onChange={(value)=>updateSetting('landingClickIcon', value)} onBusy={onUploadBusy} disabled={saving} artwork/>
+          </div>
+          <p className="admin-background-note">Removing the logo shows the brand name. Removing the click icon hides it. Click Save Settings after making changes.</p>
           <details className="settings-card admin-legacy-settings"><summary>Other Website Settings</summary><div className="admin-form-grid">
             <Field label="Card Logo Text"><input value={data.settings.brandLong || ''} onChange={(event)=>updateSetting('brandLong', event.target.value)}/></Field>
             <Field label="Hero Small Title"><input value={data.settings.heroKicker || ''} onChange={(event)=>updateSetting('heroKicker', event.target.value)}/></Field>
